@@ -1,0 +1,212 @@
+' ============================================================
+'  NEARJOB PLATFORM — DIAGRAMMES UML (VERSION BIEN ORGANISÉE)
+' ============================================================
+
+' ╔══════════════════════════════════════════════════════════╗
+' ║            1. DIAGRAMME DE CLASSES (COMPLET & PROPRE)     ║
+' ╚══════════════════════════════════════════════════════════╝
+
+@startuml NearJob_ClassDiagram_Clean
+
+' --- Configuration Visuelle ---
+skinparam Linetype ortho
+skinparam shadowing false
+skinparam roundCorner 10
+skinparam nodesep 100
+skinparam ranksep 80
+
+skinparam class {
+    BackgroundColor #F8FAFC
+    BorderColor #2E59D9
+    ArrowColor #2E59D9
+    FontColor #1F2937
+    HeaderBackgroundColor #2E59D9
+    HeaderFontColor #FFFFFF
+}
+
+package "Utilisateurs & Profils" {
+    class Utilisateur << (A, #FF7700) Abstract >> {
+        + id : UUID
+        + email : String
+        + motDePasse : String
+        + telephone : String
+        + estBanni : Boolean
+        + estVerifie : Boolean
+    }
+
+    class Candidat {
+        + nomComplet : String
+        + cv_url : String
+        + competences : List<String>
+        + localisation : Point
+    }
+
+    class Entreprise {
+        + nomEntreprise : String
+        + description : Text
+        + secteur : String
+        + siteWeb : String
+        + logo : String
+    }
+
+    class Admin {
+        + role : Enum
+        + permissions : List<String>
+    }
+}
+
+package "Gestion des Offres" {
+    class OffreEmploi {
+        + id : UUID
+        + titre : String
+        + description : Text
+        + typeContrat : Enum
+        + salaire : Range
+        + statut : Enum {OUVERT, FERME, ARCHIVE}
+    }
+
+    class Categorie {
+        + id : Int
+        + nom : String
+        + icone : String
+    }
+
+    class Candidature {
+        + id : UUID
+        + datePostulation : DateTime
+        + statut : Enum {EN_ATTENTE, ACCEPTE, REFUSE}
+        + note_recruteur : Text
+    }
+}
+
+package "Communication & Social" {
+    class Conversation {
+        + id : UUID
+        + dateCreation : DateTime
+    }
+
+    class Message {
+        + id : UUID
+        + contenu : Text
+        + dateEnvoi : DateTime
+        + estLu : Boolean
+    }
+
+    class Notification {
+        + id : UUID
+        + titre : String
+        + message : String
+        + url : String
+        + estLu : Boolean
+    }
+}
+
+package "Modération & Retour" {
+    class Signalement {
+        + id : UUID
+        + motif : String
+        + description : Text
+        + statut : Enum {TRAITE, EN_COURS}
+    }
+
+    class Evaluation {
+        + id : UUID
+        + note : Int
+        + commentaire : Text
+    }
+}
+
+' --- Relations (Alignées pour éviter les croisements) ---
+Utilisateur <|-- Candidat
+Utilisateur <|-- Entreprise
+Utilisateur <|-- Admin
+
+Entreprise "1" -- "*" OffreEmploi : "publie"
+OffreEmploi "1" -- "*" Candidature : "reçoit"
+Candidat "1" -- "*" Candidature : "soumet"
+
+OffreEmploi "*" -- "1" Categorie : "appartient à"
+
+Conversation "1" *-- "*" Message : "contient"
+Candidat "1" -- "*" Conversation : "participe"
+Entreprise "1" -- "*" Conversation : "participe"
+
+Utilisateur "1" -- "*" Notification : "reçoit"
+Utilisateur "1" -- "*" Signalement : "fait / est signalé"
+Candidat "1" -- "*" Evaluation : "évalue / est évalué"
+Entreprise "1" -- "*" Evaluation : "évalue / est évalué"
+
+@enduml
+
+' ╔══════════════════════════════════════════════════════════╗
+' ║        2. DIAGRAMME DE SÉQUENCE (BOÎTE BLANCHE)         ║
+' ╚══════════════════════════════════════════════════════════╝
+
+@startuml NearJob_Sequence_WhiteBox
+
+' --- Style ---
+skinparam backgroundColor #FFFFFF
+skinparam sequenceMessageAlign center
+skinparam ParticipantPadding 20
+
+actor "Utilisateur\n(Candidat/Entreprise)" as User
+participant "Interface\n(React/Vite)" as UI
+participant "Routeur / Limiteur" as Router
+participant "Middleware\nAuth/JWT" as Auth
+participant "Contrôleur\n(Logic)" as Ctrl
+participant "Modèles / ORM\n(Sequelize)" as ORM
+database "Base de Données\n(MySQL)" as DB
+
+== Flux Candidat : Postuler à une offre ==
+
+User -> UI : Clique sur "Postuler"
+UI -> Router : POST /api/jobs/:id/apply
+activate Router
+
+Router -> Auth : verifyToken(headers)
+activate Auth
+Auth -> Auth : Décoder JWT
+Auth --> Router : Token Valide (userId, userType)
+deactivate Auth
+
+Router -> Ctrl : applyToJob(req, res)
+activate Ctrl
+Ctrl -> ORM : Job.findByPk(jobId)
+ORM -> DB : SELECT * FROM Jobs WHERE...
+DB --> ORM : Job Data
+ORM --> Ctrl : Job Object
+
+Ctrl -> ORM : Application.create({...})
+ORM -> DB : INSERT INTO Applications...
+DB --> ORM : OK (Success)
+ORM --> Ctrl : Application Instance
+
+Ctrl --> UI : 201 Created (Success Message)
+deactivate Ctrl
+deactivate Router
+
+UI --> User : Affiche "Candidature envoyée !"
+
+== Flux Entreprise : Publier une offre ==
+
+User -> UI : Remplit le formulaire d'offre
+UI -> Router : POST /api/jobs
+activate Router
+
+Router -> Auth : checkRole('company')
+Auth --> Router : Authorized
+
+Router -> Ctrl : createJob(req, res)
+activate Ctrl
+Ctrl -> ORM : Job.create(jobData)
+ORM -> DB : INSERT INTO Jobs...
+DB --> ORM : Job Created
+ORM --> Ctrl : Job Object
+
+Ctrl --> UI : 201 Created (Job Data)
+deactivate Ctrl
+deactivate Router
+
+UI --> User : Redirige vers "Mes Offres"
+
+@enduml

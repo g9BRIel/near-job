@@ -1,0 +1,40 @@
+# Cahier des Charges - Projet NearJob
+
+## 1. Objectifs détaillés
+Le projet NearJob vise à créer une plateforme de recrutement moderne et intuitive. Les objectifs principaux sont :
+- **Mise en relation directe** : Faciliter le contact entre recruteurs et candidats via un système de messagerie fluide.
+- **Gestion des offres** : Permettre aux entreprises de publier, modifier et suivre leurs offres d'emploi.
+- **Expérience Candidat** : Offrir aux chercheurs d'emploi une interface claire pour postuler, suivre leurs candidatures et gérer leur profil.
+- **Modération et Sécurité** : Implémenter un système de signalement (reports) et de modération (bannissement d'utilisateurs malveillants) pour garantir la qualité de la plateforme.
+- **Dashboard Analytics** : Fournir des statistiques détaillées pour les administrateurs et les entreprises (insights sur les vues, candidatures, etc.).
+
+## 2. Contraintes techniques et fonctionnelles
+
+### Contraintes Fonctionnelles :
+- **Messagerie en temps réel** : Les utilisateurs doivent pouvoir discuter instantanément.
+- **Système de notification** : Alertes pour les nouvelles candidatures ou messages.
+- **Filtrage Avancé** : Recherche d'emploi par catégorie, localisation et type de contrat.
+- **Multilingue** : Support de plusieurs langues (Français, Anglais, etc.) pour une portée internationale.
+- **RGPD & Confidentialité** : Protection des données personnelles des utilisateurs.
+
+### Contraintes Techniques :
+- **Performance** : Temps de chargement optimal des pages et des images.
+- **Responsivité** : Interface totalement adaptable (Mobile, Tablette, Desktop).
+- **Sécurité** : Authentification Robuste (JWT), hachage des mots de passe.
+- **Maintenance** : Code modulaire et documenté pour faciliter les futures évolutions.
+
+## 3. Technologies choisies
+
+### Frontend :
+- **React.js** : Pour une interface utilisateur réactive et dynamique.
+- **Vite** : Pour un environnement de développement et un build ultra-rapide.
+- **Tailwind CSS** : Pour un design moderne, épuré et hautement personnalisable.
+- **Framer Motion** : Pour des animations fluides et une expérience utilisateur premium.
+
+### Backend :
+- **Node.js & Express** : Pour un serveur API performant et scalable.
+- **Sequelize (ORM)** : Pour la gestion simplifiée de la base de données relationnelle.
+- **Socket.io** : Pour la communication bidirectionnelle en temps réel (Chat).
+
+### Base de données :
+- **PostgreSQL / MySQL** : Stockage fiable et structuré des données.

@@ -1,0 +1,327 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-color, #0f172a);
+  color: var(--text-color, #ffffff);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+  --bg-color: #0f172a;
+  --text-color: #ffffff;
+  --muted-text: #94a3b8;
+  --panel-bg: rgba(255, 255, 255, 0.05);
+  --panel-border: rgba(255, 255, 255, 0.1);
+  --scrollbar-track: #0f172a;
+  --scrollbar-thumb: rgba(255, 255, 255, 0.2);
+}
+
+html.light {
+  --bg-color: #f8fafc;
+  --text-color: #1e293b;
+  --muted-text: #64748b;
+  --panel-bg: rgba(255, 255, 255, 0.7);
+  --panel-border: rgba(15, 23, 42, 0.1);
+  --scrollbar-track: #f1f5f9;
+  --scrollbar-thumb: #cbd5e1;
+}
+
+html.dark {
+  --bg-color: #0f172a;
+  --text-color: #f8fafc;
+  --muted-text: #94a3b8;
+  --panel-bg: rgba(30, 41, 59, 0.5);
+  --panel-border: rgba(255, 255, 255, 0.1);
+  --scrollbar-track: #0f172a;
+  --scrollbar-thumb: #334155;
+}
+
+/* Skeleton & Loading States */
+.skeleton {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.dark .skeleton {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.light .skeleton {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.light .skeleton::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 0, 0, 0.05),
+    transparent
+  );
+}
+
+/* Glass Enhancement */
+.glass,
+.bg-panel,
+.bg-main,
+sidebar,
+nav {
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.text-main,
+.text-muted {
+  transition: color 0.1s ease;
+}
+
+.text-main { color: var(--text-color); }
+.text-muted { color: var(--muted-text); }
+.bg-main { background-color: var(--bg-color); }
+.bg-panel { background-color: var(--panel-bg); }
+.border-main { border-color: var(--panel-border); }
+
+.glass {
+  background: var(--panel-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--panel-border);
+}
+
+body {
+  color: var(--text-color);
+}
+
+.text-gray-400,
+.text-gray-500,
+.text-gray-600,
+.text-gray-700,
+.text-gray-800 {
+  color: var(--muted-text) !important;
+}
+
+/* Fix light mode invisibility by overriding hardcoded dark-mode tailwind classes in bright variant */
+html.light .text-white,
+html.light .text-gray-300,
+html.light .text-gray-200 {
+  color: var(--text-color) !important;
+}
+
+/* KEEP text white on actual colored background buttons/badges where it's supposed to be white */
+html.light .text-white[class*="bg-gradient"],
+html.light .text-white[class*="bg-blue"],
+html.light .text-white[class*="bg-purple"],
+html.light .text-white[class*="bg-red"],
+html.light .text-white[class*="bg-green"],
+html.light .text-white[class*="bg-indigo"],
+html.light .text-white[class*="bg-violet"],
+html.light .active-tab {
+  color: #ffffff !important;
+}
+
+html.light .bg-white\/5 {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+html.light .bg-white\/10 {
+  background-color: rgba(0, 0, 0, 0.1) !important;
+}
+html.light .bg-white\/20 {
+  background-color: rgba(0, 0, 0, 0.2) !important;
+}
+html.light .hover\:bg-white\/10:hover {
+  background-color: rgba(0, 0, 0, 0.1) !important;
+}
+html.light .hover\:bg-white\/20:hover {
+  background-color: rgba(0, 0, 0, 0.2) !important;
+}
+html.light .border-white\/5 {
+  border-color: rgba(0, 0, 0, 0.05) !important;
+}
+html.light .border-white\/10 {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+html.light .border-white\/20 {
+  border-color: rgba(0, 0, 0, 0.2) !important;
+}
+html.light .border-white\/30 {
+  border-color: rgba(0, 0, 0, 0.3) !important;
+}
+html.light .bg-slate-800, 
+html.light .bg-slate-900, 
+html.light [class*="bg-[#0d0d0d]"] {
+  background-color: var(--bg-color) !important;
+}
+
+/* Fix glass in light mode to be more visible and high-contrast */
+html.light .glass {
+  background: rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+/* Fix hover states for buttons with white backgrounds/borders */
+html.light .hover\:bg-white\/5:hover, 
+html.light .hover\:bg-white\/10:hover,
+html.light .hover\:bg-white\/20:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Fix borders of notification badges and dark utility borders */
+html.light .border-slate-900,
+html.light .border-white\/10,
+html.light .border-white\/20,
+html.light .border-emerald-500\/40 {
+  border-color: var(--panel-border) !important;
+}
+
+/* Fix text colors inside notification messages that use white/70 */
+html.light .text-white\/70,
+html.light .text-white\/60,
+html.light .text-white\/40 {
+  color: var(--muted-text) !important;
+}
+html.light .text-white\/20 {
+  color: var(--muted-text);
+  opacity: 0.8;
+}
+
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 3s infinite ease-in-out;
+}
+
+@keyframes modal-float {
+  0% { transform: translateY(20px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.modal-float {
+  animation: modal-float 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+.sidebar-item {
+  transition: all 0.2s;
+}
+
+.sidebar-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.active-tab {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.nearby-card {
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from { 
+    opacity: 0; 
+    transform: translateX(-20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateX(0); 
+  }
+}
+
+.map-dot {
+  animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb);
+  opacity: 0.8;
+}
