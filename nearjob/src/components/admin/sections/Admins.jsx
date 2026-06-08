@@ -13,7 +13,7 @@ export default function Admins({ admins, onRefresh, adminData }) {
   const [newAdmin, setNewAdmin] = useState({ name: '', email: '', password: '', adminType: 'admin' });
   const [loading, setLoading] = useState(false);
 
-  if (adminData?.adminType !== 'superadmin') {
+  if (!adminData?.isSuperAdmin) {
     return (
       <div className="glass rounded-2xl p-10 border border-white/5 shadow-xl text-center">
         <ShieldCheck className="w-12 h-12 text-rose-500 mx-auto mb-4 opacity-50" />

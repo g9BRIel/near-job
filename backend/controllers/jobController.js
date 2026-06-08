@@ -34,7 +34,7 @@ exports.getJobs = async (req, res) => {
       include: [{
         model: Company,
         as: 'companyUser',
-        attributes: ['id', 'companyName', 'logo', 'location', 'isBanned'],
+        attributes: ['id', 'companyName', 'logo', 'location', 'latitude', 'longitude', 'isBanned'],
       }],
       order: [['createdAt', 'DESC']],
     });
@@ -79,7 +79,7 @@ exports.getJobById = async (req, res) => {
       include: [{
         model: Company,
         as: 'companyUser',
-        attributes: ['id', 'companyName', 'logo', 'location', 'isBanned'],
+        attributes: ['id', 'companyName', 'logo', 'location', 'latitude', 'longitude', 'isBanned'],
       }],
     });
 

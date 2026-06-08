@@ -76,6 +76,8 @@ const companyPublicDTO = (company) => {
     industry:    c.industry,
     companySize: c.companySize,
     location:    c.location,
+    latitude:    c.latitude,
+    longitude:   c.longitude,
     website:     c.website,
     logo:        c.logo,
     bio:         c.bio,

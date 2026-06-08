@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
-import { AlertTriangle, CheckCircle, Clock, ShieldAlert, Eye, Flag, X } from 'lucide-react';
+import {
+  CheckCircle, Clock, Eye, Flag,
+  ChevronDown, ChevronUp, AlertCircle,
+} from 'lucide-react';
 
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-const adminHeaders = () => { const t = localStorage.getItem('admin_token'); return { 'Content-Type': 'application/json', ...(t ? { Authorization: `Bearer ${t}` } : {}) }; };
-
-const priorityStyle = (p) => p === 'critical' ? 'bg-rose-100 text-rose-600 border-rose-200' : p === 'high' ? 'bg-orange-100 text-orange-600 border-orange-200' : 'bg-slate-100 text-slate-500 border-slate-200';
-const statusIcon = (s) => s === 'resolved' ? <CheckCircle className="w-5 h-5 text-emerald-500" /> : s === 'assigned' ? <Flag className="w-5 h-5 text-indigo-500" /> : <Clock className="w-5 h-5 text-amber-500" />;
+const API_BASE     = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const adminHeaders = () => {
+  const t = localStorage.getItem('admin_token');
+  return { 'Content-Type': 'application/json', ...(t ? { Authorization: `Bearer ${t}` } : {}) };
+};
 
 export default function Reports({ reports, onRefresh }) {
-  const [filter, setFilter] = useState('all');
-  const [selected, setSelected] = useState(null);
+  const [filter,    setFilter]    = useState('all');
+  const [expanded,  setExpanded]  = useState(null);
   const [resolving, setResolving] = useState(null);
 
   const filtered = reports.filter(r => filter === 'all' || r.status === filter);
@@ -17,85 +20,186 @@ export default function Reports({ reports, onRefresh }) {
   const resolve = async (id) => {
     setResolving(id);
     try {
-      await fetch(`${API_BASE}/api/admin/reports/${id}/status`, { method: 'PATCH', headers: adminHeaders(), body: JSON.stringify({ status: 'resolved' }) });
+      await fetch(
+        `${API_BASE}/api/admin/reports/${id}/status`,
+        { method: 'PATCH', headers: adminHeaders(), body: JSON.stringify({ status: 'resolved' }) }
+      );
       onRefresh();
     } finally { setResolving(null); }
   };
 
+  const statusBadge = (s) => {
+    if (s === 'resolved') return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+    if (s === 'assigned') return 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20';
+    return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+  };
+
+  const StatusIcon = ({ s }) => {
+    if (s === 'resolved') return <CheckCircle className="w-4 h-4 text-emerald-400" />;
+    if (s === 'assigned') return <Flag        className="w-4 h-4 text-indigo-400"  />;
+    return <Clock className="w-4 h-4 text-amber-400" />;
+  };
+
+  /* filter pill counts */
+  const counts = {
+    all:      reports.length,
+    pending:  reports.filter(r => r.status === 'pending').length,
+    assigned: reports.filter(r => r.status === 'assigned').length,
+    resolved: reports.filter(r => r.status === 'resolved').length,
+  };
+
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      {/* Stats row */}
-      <div className="flex gap-3 flex-wrap">
+    <div className="space-y-6 animate-in fade-in duration-300">
+
+      {/* ── Filter pills ─────────────────────────────────────────────────── */}
+      <div className="flex flex-wrap gap-2">
         {[
-          { label: 'Network_All', key: 'all', count: reports.length, style: 'bg-white/5 border-white/10 text-main' },
-          { label: 'Buffer_Pending', key: 'pending', count: reports.filter(r => r.status === 'pending').length, style: 'bg-amber-500/10 border-amber-500/20 text-amber-500' },
-          { label: 'Assigned_Node', key: 'assigned', count: reports.filter(r => r.status === 'assigned').length, style: 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400' },
-          { label: 'Stabilized', key: 'resolved', count: reports.filter(r => r.status === 'resolved').length, style: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500' },
+          { key: 'all',      label: 'All',      color: 'bg-white/5 border-white/10 text-main' },
+          { key: 'pending',  label: 'Pending',  color: 'bg-amber-500/10 border-amber-500/20 text-amber-400' },
+          { key: 'assigned', label: 'Assigned', color: 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400' },
+          { key: 'resolved', label: 'Resolved', color: 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' },
         ].map(f => (
-          <button key={f.key} onClick={() => setFilter(f.key)} className={`px-4 py-2 rounded-xl border font-black text-[10px] uppercase tracking-widest transition-all shadow-sm ${f.style} ${filter === f.key ? 'ring-2 ring-indigo-500/50 shadow-lg' : 'hover:opacity-80'}`}>
-            {f.label} <span className="opacity-40">[{f.count}]</span>
+          <button
+            key={f.key}
+            onClick={() => setFilter(f.key)}
+            className={`px-4 py-2 rounded-xl border font-black text-[10px] uppercase tracking-widest transition-all ${f.color}
+              ${filter === f.key ? 'ring-2 ring-indigo-500/40 shadow-lg' : 'hover:opacity-80'}`}
+          >
+            {f.label} <span className="opacity-50 ml-1">({counts[f.key]})</span>
           </button>
         ))}
       </div>
 
-      {/* Report Cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {filtered.map(r => (
-          <div key={r.id} className="glass rounded-2xl border border-white/5 shadow-sm hover:translate-y-[-4px] transition-all overflow-hidden relative group">
-            <div className={`h-1 w-full absolute top-0 left-0 ${r.priority === 'critical' ? 'bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)]' : r.priority === 'high' ? 'bg-orange-500' : 'bg-muted/20'}`} />
-            <div className="p-6">
-              <div className="flex items-start justify-between mb-4 mt-2">
-                <div className="flex items-center gap-3">
-                  <span className={`px-2 py-1 rounded-lg text-[8px] font-black uppercase tracking-widest border ${priorityStyle(r.priority).replace('bg-rose-100', 'bg-rose-500/10').replace('text-rose-600', 'text-rose-500').replace('border-rose-200', 'border-rose-500/20').replace('bg-orange-100', 'bg-orange-500/10').replace('text-orange-600', 'text-orange-500').replace('border-orange-200', 'border-orange-500/20').replace('bg-slate-100', 'bg-white/5').replace('text-slate-500', 'text-muted').replace('border-slate-200', 'border-white/10')}`}>{r.priority || 'normal'}</span>
-                  <span className="text-[8px] font-black text-muted uppercase tracking-widest opacity-40">SIG_{typeof r.id === 'string' ? r.id.slice(-6).toUpperCase() : r.id}</span>
-                </div>
-                <div className="opacity-70">{statusIcon(r.status)}</div>
-              </div>
-              <h4 className="font-black text-main text-lg mb-2 leading-tight tracking-tight uppercase">{r.title}</h4>
-              <p className="text-muted font-bold text-[10px] uppercase leading-relaxed mb-6 line-clamp-2 opacity-50 tracking-wider font-mono">{r.description || 'No description provided.'}</p>
-              
-              <div className="flex items-center gap-2 text-[9px] text-muted font-black uppercase tracking-[0.15em] mb-6 border-b border-white/5 pb-4">
-                <Clock className="w-3 h-3 text-indigo-400" /> {new Date(r.createdAt).toLocaleString()}
-                {r.reporterId && <><span className="mx-2 opacity-20">•</span> Node_{typeof r.reporterId === 'string' ? r.reporterId.slice(-4).toUpperCase() : r.reporterId}</>}
-              </div>
+      {/* ── Report table ─────────────────────────────────────────────────── */}
+      <div className="glass rounded-2xl border border-white/5 overflow-hidden shadow-xl">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-white/5 border-b border-white/5">
+              <tr>
+                {['Reporter', 'Subject / Title', 'Message', 'Status', 'Date', 'Actions'].map(h => (
+                  <th key={h} className="px-6 py-4 font-black uppercase tracking-widest text-[10px] text-muted">
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
 
-              <div className="flex gap-2">
-                {r.status !== 'resolved' && (
-                  <button onClick={() => resolve(r.id)} disabled={resolving === r.id} className="flex-1 py-3 bg-emerald-600 text-white font-black rounded-xl text-[10px] uppercase tracking-widest shadow-xl shadow-emerald-900/40 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 border border-white/10">
-                    {resolving === r.id ? 'STABILIZING...' : 'Authorize_Resolution'}
-                  </button>
-                )}
-                {r.status === 'resolved' && (
-                  <div className="flex-1 py-3 bg-white/5 text-emerald-500 font-black rounded-xl text-[10px] uppercase tracking-widest text-center border border-emerald-500/20">Stabilized</div>
-                )}
-                <button onClick={() => setSelected(selected?.id === r.id ? null : r)} className="px-4 py-3 bg-white/5 text-muted rounded-xl hover:text-indigo-400 border border-white/10 transition-all"><Eye className="w-4 h-4" /></button>
-              </div>
+            <tbody className="divide-y divide-white/5">
+              {filtered.map(r => {
+                const isOpen = expanded === r.id;
+                return (
+                  <React.Fragment key={r.id}>
+                    <tr className="hover:bg-white/[0.02] transition-colors">
 
-              {/* Detail Expand */}
-              {selected?.id === r.id && (
-                <div className="mt-5 pt-5 border-t border-white/5 animate-in slide-in-from-top-2 duration-300">
-                  <div className="space-y-4 text-[9px] font-black uppercase tracking-widest">
-                    <div className="flex items-center gap-3"><span className="text-muted w-20">Protocol_State</span><span className="text-main capitalize">{r.status}</span></div>
-                    <div className="flex items-center gap-3"><span className="text-muted w-20">Node_Assignee</span><span className="text-main">{r.assignedToType || 'None'}</span></div>
-                    {r.notes && <div className="flex items-start gap-3"><span className="text-muted w-20 pt-0.5">Core_Notes</span><span className="text-main lowercase tracking-normal font-medium">{r.notes}</span></div>}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
+                      {/* Reporter */}
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2">
+                          <div className="w-7 h-7 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center flex-shrink-0 border border-indigo-500/10">
+                            <AlertCircle className="w-3.5 h-3.5" />
+                          </div>
+                          <p className="text-muted font-bold">
+                            {r.reporterName || r.reporterId ? `#${String(r.reporterId).slice(-6)}` : 'Anonymous'}
+                          </p>
+                        </div>
+                      </td>
 
-      {filtered.length === 0 && (
-        <div className="py-24 text-center glass rounded-2xl border border-white/5 shadow-xl">
-          <div className="w-16 h-16 bg-emerald-500/10 text-emerald-500 rounded-xl flex items-center justify-center mx-auto mb-6 border border-emerald-500/20">
-             <CheckCircle className="w-8 h-8" />
-          </div>
-          <h3 className="text-lg font-black text-main uppercase tracking-widest leading-none mb-2">Network: Stabilized</h3>
-          <p className="text-muted font-bold text-[10px] uppercase tracking-widest opacity-40">No unresolved anomaly signals in the current buffer sector.</p>
+                      {/* Title */}
+                      <td className="px-6 py-4">
+                        <p className="font-black text-main max-w-[150px] truncate">{r.title || 'No title'}</p>
+                      </td>
+
+                      {/* Description preview */}
+                      <td className="px-6 py-4">
+                        <p className="text-muted font-medium max-w-[200px] truncate">
+                          {r.description || r.message || '—'}
+                        </p>
+                      </td>
+
+                      {/* Status */}
+                      <td className="px-6 py-4">
+                        <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-[9px] font-black uppercase tracking-widest border ${statusBadge(r.status)}`}>
+                          <StatusIcon s={r.status} />
+                          {r.status || 'pending'}
+                        </span>
+                      </td>
+
+                      {/* Date */}
+                      <td className="px-6 py-4 text-muted font-bold whitespace-nowrap">
+                        {r.createdAt ? new Date(r.createdAt).toLocaleDateString() : '—'}
+                      </td>
+
+                      {/* Actions */}
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2">
+                          {r.status !== 'resolved' && (
+                            <button
+                              onClick={() => resolve(r.id)}
+                              disabled={resolving === r.id}
+                              className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 text-white rounded-lg font-black text-[9px] uppercase tracking-widest hover:bg-emerald-500 disabled:opacity-50 transition-all"
+                            >
+                              <CheckCircle className="w-3 h-3" />
+                              {resolving === r.id ? '…' : 'Resolve'}
+                            </button>
+                          )}
+                          {r.status === 'resolved' && (
+                            <span className="px-3 py-1.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-lg font-black text-[9px] uppercase tracking-widest">
+                              Done
+                            </span>
+                          )}
+                          {/* Expand to read full message */}
+                          <button
+                            onClick={() => setExpanded(isOpen ? null : r.id)}
+                            className="p-1.5 bg-white/5 text-muted hover:text-main rounded-lg transition-all border border-white/10"
+                            title="Read full report"
+                          >
+                            {isOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+
+                    {/* Expanded: full report message ───────────────────── */}
+                    {isOpen && (
+                      <tr className="bg-white/[0.015]">
+                        <td colSpan={6} className="px-8 py-5">
+                          <div className="space-y-3">
+                            <p className="text-[9px] text-muted font-black uppercase tracking-widest">Full Report</p>
+                            <div className="bg-slate-900/60 border border-white/5 rounded-xl p-4">
+                              <p className="text-slate-300 text-sm leading-relaxed font-medium">
+                                {r.description || r.message || 'No description provided.'}
+                              </p>
+                            </div>
+                            {r.notes && (
+                              <div className="bg-white/5 border border-white/5 rounded-xl p-4">
+                                <p className="text-[9px] text-muted font-black uppercase tracking-widest mb-1">Admin Notes</p>
+                                <p className="text-slate-300 text-sm leading-relaxed font-medium">{r.notes}</p>
+                              </div>
+                            )}
+                            <div className="flex gap-4 text-[10px] text-muted font-bold">
+                              {r.reportedId     && <span>Reported user: <span className="text-main">#{String(r.reportedId).slice(-6)}</span></span>}
+                              {r.reportedType   && <span>Type: <span className="text-main capitalize">{r.reportedType}</span></span>}
+                              {r.priority       && <span>Priority: <span className="text-amber-400 capitalize">{r.priority}</span></span>}
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
-      )}
+
+        {filtered.length === 0 && (
+          <div className="py-20 text-center">
+            <CheckCircle className="w-10 h-10 text-emerald-500/30 mx-auto mb-3" />
+            <p className="text-muted text-[10px] font-black uppercase tracking-widest opacity-40">
+              No reports in this category
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
-

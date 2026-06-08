@@ -4,16 +4,16 @@
     "1": {
       "weeklyStats": [
         0,
-        0,
+        1,
         0,
         0,
         0,
         0,
         0
       ],
-      "totalActivity": 0,
+      "totalActivity": 1,
       "label": "Messages Sent",
-      "updatedAt": "2026-05-25T07:08:21.137Z"
+      "updatedAt": "2026-06-08T18:04:17.402Z"
     }
   }
 }
