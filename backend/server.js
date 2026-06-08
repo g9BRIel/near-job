@@ -100,6 +100,13 @@ app.use((err, req, res, next) => {
 // ─── Database & Server Start ──────────────────────────────────────────────────
 const PORT = process.env.PORT || 5000;
 
+// Start server FIRST so Railway healthcheck at /health passes immediately
+const server = app.listen(PORT, '0.0.0.0', () => {
+  console.log(`[SERVER] NearJob API running on port ${PORT}`);
+  console.log(`[SERVER] Environment: ${process.env.NODE_ENV || 'development'}`);
+});
+
+// Connect DB after server is already listening
 sequelize
   .sync()
   .then(async () => {
@@ -115,13 +122,9 @@ sequelize
         console.warn('[DB] Could not set max_allowed_packet. Large uploads may fail.');
       }
     }
-
-    app.listen(PORT, () => {
-      console.log(`[SERVER] NearJob API running on port ${PORT}`);
-      console.log(`[SERVER] Environment: ${process.env.NODE_ENV || 'development'}`);
-    });
   })
   .catch((err) => {
     console.error('[DB] Connection failed:', err.message);
-    console.error('[DB] Ensure MySQL is running and database "nearjob" exists.');
+    console.error('[DB] Check DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD env vars.');
+    process.exit(1); // Exit so Railway restarts the container (not silent crash)
   });
