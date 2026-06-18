@@ -24,7 +24,10 @@ const helmetMiddleware = helmet({
 // ─── 2. CORS (strict whitelist) ──────────────────────────────────────────────
 const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000')
   .split(',')
-  .map((o) => o.trim());
+  .map((o) => o.trim())
+  // Always allow nearjob.com regardless of env var
+  .concat(['https://nearjob.com', 'https://www.nearjob.com'])
+  .filter((o, i, arr) => arr.indexOf(o) === i); // deduplicate
 
 const corsMiddleware = cors({
   origin: (origin, callback) => {
