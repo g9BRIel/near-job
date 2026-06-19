@@ -51,6 +51,9 @@ const reportRoutes       = require('./routes/reportRoutes');
 
 const app = express();
 
+// ─── Trust Railway's reverse proxy (required for rate-limiter IP detection) ───
+app.set('trust proxy', 1);
+
 // ─── Core Security Middleware Stack ──────────────────────────────────────────
 app.use(helmetMiddleware);            // HTTP security headers
 app.use(corsMiddleware);              // Strict CORS whitelist

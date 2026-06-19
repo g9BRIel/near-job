@@ -37,11 +37,17 @@ const AuthPage = ({ onLogin }) => {
         // Pass userType and profile data to App
         onLogin(data.userType, data.profile || data); 
       } else {
-        alert(data.message || 'Authentication failed');
+        // Show field-level validation errors if present (from server Joi validation)
+        if (data.details && data.details.length > 0) {
+          const msgs = data.details.map(d => `• ${d.message}`).join('\n');
+          alert(`${data.error}\n\n${msgs}`);
+        } else {
+          alert(data.error || data.message || 'Authentication failed');
+        }
       }
     } catch (err) {
       console.error(err);
-      alert('Error connecting to backend');
+      alert('Could not connect to server. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -165,6 +171,9 @@ const AuthPage = ({ onLogin }) => {
                     )}
                   </div>
                 )}
+                {field.type === 'password' && (
+                  <p className="text-xs text-gray-500 mt-1">Min 8 chars • uppercase • lowercase • number</p>
+                )}
               </div>
             ))
           ) : (
@@ -186,7 +195,7 @@ const AuthPage = ({ onLogin }) => {
                   <input
                     type={showPassword ? 'text' : 'password'}
                     name="password"
-                    placeholder="••••••••"
+                    placeholder="Min 6 characters"
                     onChange={handleChange}
                     className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
                   />
