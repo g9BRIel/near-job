@@ -31,10 +31,18 @@ const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000')
 
 const corsMiddleware = cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (curl, mobile apps, Postman in dev)
-    if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+    // 1. Allow if no origin (mobile apps, curl, etc.)
+    if (!origin) return callback(null, true);
+
+    // 2. Allow if wildcard '*' is set in environment
+    if (process.env.ALLOWED_ORIGINS === '*') return callback(null, true);
+
+    // 3. Clean and check against whitelist
+    const cleanOrigin = origin.replace(/\/$/, ''); // remove trailing slash
+    if (ALLOWED_ORIGINS.includes(cleanOrigin) || ALLOWED_ORIGINS.includes(origin)) {
       callback(null, true);
     } else {
+      console.warn(`[CORS_REJECTED] Origin: ${origin}`);
       callback(new Error(`CORS: Origin ${origin} not allowed`));
     }
   },

@@ -190,22 +190,24 @@ const JobsPage = ({ userType, companyFilter, onClearCompanyFilter }) => {
             />
             <Search className="absolute left-4 top-3.5 w-5 h-5 text-gray-400" />
           </div>
-          <button
-            type="button"
-            onClick={() => setFilterOpen((v) => !v)}
-            className={`px-6 py-3 rounded-xl border border-white/10 text-white flex items-center justify-center gap-2 transition ${
-              filterOpen || activeTags.size ? 'bg-blue-600/30 border-blue-500/50' : 'bg-white/5 hover:bg-white/10'
-            }`}
-          >
-            <Filter className="w-5 h-5" /> Filters {activeTags.size ? `(${activeTags.size})` : ''}
-          </button>
-          <button
-            type="button"
-            onClick={runSearch}
-            className="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium hover:opacity-90 transition"
-          >
-            {userType === 'worker' ? 'Search Jobs' : 'Find Talent'}
-          </button>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => setFilterOpen((v) => !v)}
+              className={`flex-1 md:flex-none px-4 md:px-6 py-3 rounded-xl border border-white/10 text-white flex items-center justify-center gap-2 transition ${
+                filterOpen || activeTags.size ? 'bg-blue-600/30 border-blue-500/50' : 'bg-white/5 hover:bg-white/10'
+              }`}
+            >
+              <Filter className="w-5 h-5" /> <span className="hidden sm:inline">Filters</span> {activeTags.size ? `(${activeTags.size})` : ''}
+            </button>
+            <button
+              type="button"
+              onClick={runSearch}
+              className="flex-1 md:flex-none px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium hover:opacity-90 transition"
+            >
+              {userType === 'worker' ? 'Search' : 'Find'}
+            </button>
+          </div>
         </div>
 
         {companyFilter?.name && userType === 'worker' ? (

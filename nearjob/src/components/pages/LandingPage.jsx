@@ -9,6 +9,7 @@ const scrollToId = (id) => () => {
 
 const LandingPage = ({ onEnter }) => {
   const [showAdminDoor, setShowAdminDoor] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [adminData, setAdminData] = useState(() => {
     try {
       const stored = localStorage.getItem('admin_data');
@@ -62,19 +63,35 @@ const LandingPage = ({ onEnter }) => {
       )}
 
       {/* Navigation */}
-      <nav className="flex items-center justify-between px-8 py-6">
+      <nav className="flex items-center justify-between px-8 py-6 relative z-50">
         {/* Logo — secret trigger (click 7x fast) */}
         <div
           className="flex items-center gap-3 cursor-pointer select-none"
           onClick={handleLogoClick}
           title="NearJob"
         >
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-xl">
-            N
-          </div>
+          <img src="/logo_main.png" alt="NearJob Logo" className="w-12 h-12 object-contain" />
           <span className="text-white font-bold text-2xl">NearJob</span>
         </div>
-        <div className="flex gap-6">
+
+        {/* Mobile Menu Toggle */}
+        <button
+          className="lg:hidden text-white p-2"
+          onClick={() => setShowMobileMenu(!showMobileMenu)}
+        >
+          {showMobileMenu ? (
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          ) : (
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
+          )}
+        </button>
+
+        {/* Desktop Navigation */}
+        <div className="hidden lg:flex gap-6 items-center">
           <button type="button" onClick={scrollToId('nearjob-audience-workers')} className="text-gray-300 hover:text-white transition">
             For Workers
           </button>
@@ -88,20 +105,44 @@ const LandingPage = ({ onEnter }) => {
             Get Started
           </button>
         </div>
+
+        {/* Mobile Navigation Overlay */}
+        {showMobileMenu && (
+          <div className="lg:hidden fixed inset-0 bg-slate-900/98 backdrop-blur-xl z-40 flex flex-col items-center justify-center gap-8 animate-in fade-in zoom-in duration-300">
+            <button
+              onClick={() => { scrollToId('nearjob-audience-workers')(); setShowMobileMenu(false); }}
+              className="text-2xl text-white font-semibold"
+            >
+              For Workers
+            </button>
+            <button
+              onClick={() => { scrollToId('nearjob-audience-companies')(); setShowMobileMenu(false); }}
+              className="text-2xl text-white font-semibold"
+            >
+              For Companies
+            </button>
+            <button
+              onClick={() => { onEnter(); setShowMobileMenu(false); }}
+              className="px-10 py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold text-xl shadow-lg shadow-blue-500/20"
+            >
+              Get Started
+            </button>
+          </div>
+        )}
       </nav>
 
       {/* Hero Section */}
-      <div className="container mx-auto px-8 py-20">
+      <div className="container mx-auto px-8 py-20 landing-hero">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
-            <h1 className="text-6xl font-bold text-white mb-6 leading-tight">
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
               Find Your Next <span className="gradient-text">Opportunity</span> Just Around the Corner
             </h1>
-            <p className="text-xl text-gray-300 mb-8 leading-relaxed">
+            <p className="text-lg md:text-xl text-gray-300 mb-8 leading-relaxed">
               Connect with top companies and talented professionals in your neighborhood.
               NearJob uses location intelligence to match the perfect opportunities with the right people.
             </p>
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 hero-buttons">
               <button
                 onClick={onEnter}
                 className="px-8 py-4 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold text-lg hover:opacity-90 transition shadow-lg shadow-purple-500/25"
@@ -232,7 +273,7 @@ const LandingPage = ({ onEnter }) => {
       <footer className="container mx-auto px-8 py-8 border-t border-white/10">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3" onClick={handleLogoClick} style={{ cursor: 'default' }}>
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">N</div>
+            <img src="/logo_main.png" alt="NearJob Logo" className="w-8 h-8 object-contain" />
             <span className="text-white font-bold">NearJob</span>
           </div>
           <p className="text-gray-500 text-sm">© 2024 NearJob. All rights reserved.</p>

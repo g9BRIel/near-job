@@ -210,3 +210,12 @@ deactivate Router
 UI --> User : Redirige vers "Mes Offres"
 
 @enduml
+
+
+
+
+
+
+
+
+

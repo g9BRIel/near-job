@@ -98,9 +98,7 @@ const Sidebar = React.memo(({ activeTab, setActiveTab, userType, userData }) => 
     <div className="w-72 h-screen glass fixed left-0 top-0 z-50 flex flex-col border-r border-white/5">
       {/* Branding Header */}
       <div className="p-8 flex items-center gap-3">
-        <div className="w-10 h-10 bg-gradient-to-tr from-blue-600 via-indigo-500 to-purple-600 rounded-[12px] flex items-center justify-center shadow-lg shadow-indigo-500/20 rotate-3">
-          <Layers className="w-6 h-6 text-white -rotate-3" />
-        </div>
+        <img src="/logo_main.png" alt="NearJob Logo" className="w-12 h-12 object-contain rotate-3 hover:rotate-0 transition-transform duration-300" />
         <div>
           <h1 className="text-xl font-black text-white tracking-tight flex items-center gap-1">
             Near<span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">Job</span>

@@ -22,6 +22,7 @@ import SupportPage from './components/pages/SupportPage';
 import BannedScreen from './components/auth/BannedScreen';
 import { fetchCurrentProfile } from './utils/api';
 import PardonNotification from './components/common/PardonNotification';
+import MobileBottomNav from './components/layout/MobileBottomNav';
 
 function App() {
   const [authReady, setAuthReady] = useState(false);
@@ -352,6 +353,7 @@ function App() {
       </div>
       <AIAssistant userType={userType} />
       {isLoggedIn && <PardonNotification />}
+      {isLoggedIn && <MobileBottomNav activeTab={activeTab} setActiveTab={setActiveTab} />}
 
       {isChangingLang && (
         <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/20 backdrop-blur-[2px] animate-in fade-in duration-300">
