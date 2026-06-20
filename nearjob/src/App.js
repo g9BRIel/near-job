@@ -312,13 +312,19 @@ function App() {
 
   return (
     <div className="min-h-screen bg-[var(--bg-color)] text-[var(--text-color)] transition-colors duration-300">
+      {/* Background Glows for App Internal - WOW Aesthetic */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-[20%] right-[-10%] w-[30%] h-[30%] bg-blue-600/5 rounded-full blur-[100px]" />
+        <div className="absolute bottom-[20%] left-[-10%] w-[30%] h-[30%] bg-purple-600/5 rounded-full blur-[100px]" />
+      </div>
+
       <MobileHeader
         mobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
       />
 
-      {mobileMenuOpen ? (
-        <div className="lg:hidden fixed inset-0 z-40 bg-slate-900/95 pt-20 px-4">
+      {mobileMenuOpen && (
+        <div className="lg:hidden fixed inset-0 z-40">
           <Sidebar
             activeTab={activeTab}
             setActiveTab={(tab) => {
@@ -329,9 +335,9 @@ function App() {
             userData={currentUser}
           />
         </div>
-      ) : null}
+      )}
 
-      <div className="hidden lg:block">
+      <div className="hidden lg:block relative z-10">
         <Sidebar
           activeTab={activeTab}
           setActiveTab={selectTabFromMenu}
@@ -340,8 +346,8 @@ function App() {
         />
       </div>
 
-      <div className="lg:ml-72 p-4 lg:p-8 pt-20 lg:pt-8">
-        <div className="max-w-7xl mx-auto">
+      <div className="relative z-10 lg:ml-72 min-h-screen flex flex-col">
+        <div className="flex-1 w-full max-w-7xl mx-auto px-4 lg:px-8 py-20 lg:py-8">
           <TopBar 
             activeTab={activeTab} 
             userType={userType} 

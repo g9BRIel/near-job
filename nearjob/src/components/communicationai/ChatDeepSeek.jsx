@@ -80,31 +80,33 @@ export default function AiAssistant({ userType }) {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-full shadow-xl transition z-50"
+        className="fixed bottom-6 right-6 bg-indigo-600 hover:bg-indigo-700 text-white p-4 rounded-full shadow-2xl transition z-50 premium-shadow active:scale-95"
       >
         <Bot size={28} />
       </button>
 
       {isOpen && (
-        <div className="fixed bottom-24 right-6 w-[360px] h-[520px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border z-50">
-          <div className="bg-blue-600 text-white p-4 flex justify-between items-center shrink-0">
-            <div className="flex items-center gap-2">
-              <Bot size={20} />
-              <h2 className="font-semibold">NearJob AI</h2>
+        <div className="fixed bottom-24 right-6 left-6 sm:left-auto sm:w-[380px] h-[520px] max-h-[calc(100dvh-120px)] bg-white dark:bg-slate-900 rounded-[2rem] shadow-2xl flex flex-col overflow-hidden border border-slate-200 dark:border-white/10 z-[100] animate-in slide-in-from-bottom-4 duration-300">
+          <div className="premium-gradient text-white p-5 flex justify-between items-center shrink-0">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center backdrop-blur-md">
+                <Bot size={20} />
+              </div>
+              <h2 className="font-bold tracking-tight">NearJob Assistant</h2>
             </div>
-            <button onClick={() => setIsOpen(false)}>
+            <button onClick={() => setIsOpen(false)} className="hover:rotate-90 transition-transform">
               <X size={20} />
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50">
+          <div className="flex-1 overflow-y-auto p-5 space-y-4 bg-slate-50 dark:bg-slate-950/50">
             {messages.map((msg, index) => (
               <div
                 key={index}
-                className={`max-w-[80%] px-3 py-2 rounded-2xl text-sm ${
+                className={`max-w-[85%] px-4 py-3 rounded-2xl text-sm font-medium ${
                   msg.sender === "user"
-                    ? "ml-auto bg-blue-600 text-white"
-                    : "bg-white border shadow-sm text-gray-800"
+                    ? "ml-auto bg-indigo-600 text-white shadow-lg shadow-indigo-500/20"
+                    : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 shadow-sm text-slate-800 dark:text-slate-100"
                 }`}
               >
                 {msg.text}
@@ -112,45 +114,47 @@ export default function AiAssistant({ userType }) {
             ))}
 
             {loading && (
-              <div className="bg-white border text-gray-500 px-3 py-2 rounded-2xl text-sm w-fit">
-                typing...
+              <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/5 text-slate-400 dark:text-slate-500 px-4 py-2 rounded-2xl text-sm w-fit animate-pulse">
+                Thinking...
               </div>
             )}
 
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Suggestions */}
-          {!loading && messages.length < 3 && (
-            <div className="p-3 bg-white border-t flex flex-wrap gap-2">
-              {suggestions.map((s, i) => (
-                <button
-                  key={i}
-                  onClick={() => handleSuggestionClick(s)}
-                  className="text-xs px-3 py-1.5 rounded-full border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100 transition"
-                >
-                  {s}
-                </button>
-              ))}
-            </div>
-          )}
+          <div className="p-4 border-t border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 shrink-0">
+            {/* Suggestions */}
+            {!loading && messages.length < 3 && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {suggestions.map((s, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleSuggestionClick(s)}
+                    className="text-[10px] uppercase tracking-widest font-black px-3 py-1.5 rounded-full border border-indigo-500/10 bg-indigo-500/5 text-indigo-500 hover:bg-indigo-500/10 transition-colors"
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            )}
 
-          <div className="p-3 border-t flex gap-2 bg-white shrink-0">
-            <input
-              type="text"
-              value={message}
-              placeholder="Ask about jobs, CVs, or cities..."
-              onChange={(e) => setMessage(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSend()}
-              className="flex-1 border rounded-xl px-3 py-2 outline-none focus:border-blue-500 text-black text-sm"
-            />
-            <button
-              id="ai-send-btn"
-              onClick={handleSend}
-              className="bg-blue-600 text-white px-4 rounded-xl hover:bg-blue-700 transition"
-            >
-              <Send size={18} />
-            </button>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={message}
+                placeholder="Message assistant..."
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                className="flex-1 bg-slate-100 dark:bg-slate-800 border-none rounded-xl px-4 py-2.5 outline-none focus:ring-2 ring-indigo-500/30 text-slate-900 dark:text-white text-sm transition-all"
+              />
+              <button
+                id="ai-send-btn"
+                onClick={handleSend}
+                className="bg-indigo-600 text-white px-4 rounded-xl hover:bg-indigo-700 transition premium-shadow"
+              >
+                <Send size={18} />
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -109,32 +109,32 @@ const JobCard = ({ job, showApply = true }) => {
             <span className="text-sm font-medium text-main">{job.rating}</span>
             <span className="text-muted text-xs">({job.applicants} applicants)</span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3 w-full sm:w-auto justify-end">
             <button
               onClick={() => setShowReport(true)}
-              className="p-2.5 rounded-xl bg-white/5 border border-white/5 text-muted hover:text-red-400 hover:border-red-500/20 hover:bg-red-500/5 transition-all"
+              className="p-2.5 md:p-3 rounded-xl bg-white/5 border border-white/5 text-muted hover:text-red-400 hover:border-red-500/20 hover:bg-red-500/5 transition-all"
               title="Report this job"
             >
-              <Flag className="w-4 h-4" />
+              <Flag className="w-4 h-4 md:w-5 md:h-5" />
             </button>
             <button
               onClick={toggleBookmark}
-              className={`p-2.5 rounded-xl border transition-all duration-300 ${saved ? 'bg-rose-500/10 border-rose-500/30 text-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.15)]' : 'bg-white/5 border-white/5 text-muted hover:text-rose-400 hover:border-rose-500/20 hover:bg-rose-500/5'}`}
+              className={`p-2.5 md:p-3 rounded-xl border transition-all duration-300 ${saved ? 'bg-rose-500/10 border-rose-500/30 text-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.15)]' : 'bg-white/5 border-white/5 text-muted hover:text-rose-400 hover:border-rose-500/20 hover:bg-rose-500/5'}`}
               title="Save to Bookmarks"
             >
-              <Bookmark className={`w-4 h-4 ${saved ? 'fill-current' : ''}`} />
+              <Bookmark className={`w-4 h-4 md:w-5 md:h-5 ${saved ? 'fill-current' : ''}`} />
             </button>
             {showApply ? (
               <button
                 type="button"
                 onClick={handleApply}
                 disabled={applied || busy}
-                className={`px-6 py-2 rounded-xl text-sm font-bold transition-all duration-300 ${applied ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-600/20 hover:scale-105 active:scale-95'} disabled:opacity-70`}
+                className={`flex-1 sm:flex-none px-6 py-2.5 md:py-3 rounded-xl text-sm font-bold transition-all duration-300 ${applied ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-600/20 active:scale-95'} disabled:opacity-70`}
               >
                 {applied ? (
-                  <span className="flex items-center gap-2 font-bold"><CheckCircle className="w-4 h-4" /> Applied</span>
+                  <span className="flex items-center justify-center gap-2 font-bold"><CheckCircle className="w-4 h-4" /> Applied</span>
                 ) : busy ? (
-                  'Sending...'
+                  '...'
                 ) : (
                   'Apply Now'
                 )}

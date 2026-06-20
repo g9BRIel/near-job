@@ -5,13 +5,7 @@
  * This prevents sensitive field leakage (passwords, tokens, internal IDs, etc.)
  *
  * OWASP A02: Cryptographic Failures / Sensitive Data Exposure — Mitigated.
- */
-
-// ─── Worker DTO ───────────────────────────────────────────────────────────────
-/**
- * Public profile: shown to other users (workers browsing companies, etc.)
- * Minimum necessary disclosure.
- */
+*/
 const workerPublicDTO = (worker) => {
   if (!worker) return null;
   const w = worker.toJSON ? worker.toJSON() : { ...worker };
@@ -62,11 +56,9 @@ const workerPrivateDTO = (worker) => {
     lastActiveAt:w.lastActiveAt,
     createdAt:   w.createdAt,
     userType:    'worker',
-    // NEVER include: password, resetPasswordToken, resetPasswordExpires
   };
 };
 
-// ─── Company DTO ──────────────────────────────────────────────────────────────
 const companyPublicDTO = (company) => {
   if (!company) return null;
   const c = company.toJSON ? company.toJSON() : { ...company };
@@ -114,11 +106,9 @@ const companyPrivateDTO = (company) => {
     lastActiveAt:c.lastActiveAt,
     createdAt:   c.createdAt,
     userType:    'company',
-    // NEVER include: password, resetPasswordToken, resetPasswordExpires
   };
 };
 
-// ─── Job DTO ──────────────────────────────────────────────────────────────────
 const jobDTO = (job, extras = {}) => {
   if (!job) return null;
   const j = job.toJSON ? job.toJSON() : { ...job };
