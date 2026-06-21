@@ -382,7 +382,7 @@ const MessagesPage = ({ chatTarget, onConsumedChatTarget }) => {
             </div>
           </div>
 
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 scroll-smooth scrollbar-hide" ref={scrollRef}>
+        <div className="flex-1 p-4 space-y-4 scroll-smooth overflow-hidden" ref={scrollRef}>
           {selectedChat.messages.length === 0 && !selectedChat.blockedByMe && !selectedChat.blockedByThem && (
              <div className="flex flex-col items-center justify-center h-full opacity-50 space-y-4">
                 <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center text-4xl">💬</div>
@@ -469,7 +469,7 @@ const MessagesPage = ({ chatTarget, onConsumedChatTarget }) => {
       </div>
 
       <div
-        className="flex-1 overflow-y-auto w-full p-2 h-full flex items-center justify-center text-gray-400 text-center scrollbar-hide"
+        className="flex-1 w-full p-2 h-full flex items-center justify-center text-gray-400 text-center overflow-hidden"
         style={{ display: conversations.length === 0 ? 'flex' : 'none' }}
       >
         <p>
@@ -479,7 +479,7 @@ const MessagesPage = ({ chatTarget, onConsumedChatTarget }) => {
         </p>
       </div>
 
-      <div className="flex-1 overflow-y-auto scrollbar-hide" style={{ display: conversations.length > 0 ? 'block' : 'none' }}>
+      <div className="flex-1 overflow-hidden" style={{ display: conversations.length > 0 ? 'block' : 'none' }}>
         {filteredConversations.map((conv) => (
           <button
             key={`${conv.id}-${conv.otherUserId}`}
