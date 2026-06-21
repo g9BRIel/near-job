@@ -131,3 +131,44 @@ sequelize
     console.error('[DB] Check DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD env vars.');
     process.exit(1); // Exit so Railway restarts the container (not silent crash)
   });
+
+// Optional: keep frontend awake by pinging its public URL periodically.
+// Enable by setting FRONTEND_PING_URL and optionally FRONTEND_PING_INTERVAL_MINUTES.
+if (process.env.FRONTEND_PING_URL) {
+  const http = require('http');
+  const https = require('https');
+
+  const pingUrl = process.env.FRONTEND_PING_URL;
+  const intervalMin = parseInt(process.env.FRONTEND_PING_INTERVAL_MINUTES || '5', 10);
+
+  const doPing = () => {
+    try {
+      const u = new URL(pingUrl);
+      const lib = u.protocol === 'https:' ? https : http;
+      const options = {
+        method: 'GET',
+        hostname: u.hostname,
+        path: u.pathname + (u.search || ''),
+        port: u.port || (u.protocol === 'https:' ? 443 : 80),
+        timeout: 5000,
+      };
+
+      const req = lib.request(options, (res) => {
+        console.log(`[PING] ${pingUrl} -> ${res.statusCode}`);
+        res.resume();
+      });
+      req.on('error', (e) => console.warn('[PING ERROR]', e.message));
+      req.on('timeout', () => {
+        req.destroy();
+        console.warn('[PING] timeout');
+      });
+      req.end();
+    } catch (e) {
+      console.warn('[PING] invalid FRONTEND_PING_URL', e.message);
+    }
+  };
+
+  // Start immediately and repeat on interval
+  doPing();
+  setInterval(doPing, intervalMin * 60 * 1000);
+}

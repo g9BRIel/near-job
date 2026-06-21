@@ -68,8 +68,7 @@ const LandingPage = ({ onEnter }) => {
         />
       )}
 
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-[100] backdrop-blur-md bg-slate-900/40 border-b border-white/5">
+                <nav className="fixed top-0 left-0 right-0 z-[100] backdrop-blur-md bg-slate-900/40 border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           {/* Logo */}
           <div
@@ -78,7 +77,7 @@ const LandingPage = ({ onEnter }) => {
           >
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 p-[2px]">
               <div className="w-full h-full bg-slate-900 rounded-[10px] flex items-center justify-center">
-                <img src="/logo_main.png" alt="Logo" className="w-6 h-6 object-contain group-hover:scale-110 transition-transform" />
+                <img src="/mynearjoblogo.png" alt="Logo" className="w-6 h-6 object-contain" />
               </div>
             </div>
             <span className="text-white font-black text-xl tracking-tight">Near<span className="text-indigo-400">Job</span></span>
@@ -170,7 +169,7 @@ const LandingPage = ({ onEnter }) => {
               </div>
               <div>
                 <p className="text-3xl font-black text-white">400+</p>
-                <p className="text-gray-500 text-xs font-bold uppercase tracking-widest mt-1">Partners</p>
+                  <img src="/mynearjoblogo.png" alt="Logo" className="w-5 h-5 object-contain" />
               </div>
               <div>
                 <p className="text-3xl font-black text-white">98%</p>
@@ -318,15 +317,15 @@ const LandingPage = ({ onEnter }) => {
       <footer className="py-12 border-t border-white/5">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex items-center gap-3 cursor-pointer" onClick={handleLogoClick}>
-            <div className="w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center">
-              <img src="/logo_main.png" alt="Logo" className="w-5 h-5 object-contain" />
+              <div className="w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center">
+              <img src="/mynearjoblogo.png" alt="Logo" className="w-5 h-5 object-contain" />
             </div>
             <span className="text-white font-bold text-lg">NearJob</span>
           </div>
           <div className="flex gap-8 text-sm font-medium text-gray-500">
-            <a href="#" className="hover:text-white transition">Privacy</a>
-            <a href="#" className="hover:text-white transition">Terms</a>
-            <a href="#" className="hover:text-white transition">Contact</a>
+            <button type="button" onClick={() => {}} className="hover:text-white transition">Privacy</button>
+            <button type="button" onClick={() => {}} className="hover:text-white transition">Terms</button>
+            <button type="button" onClick={() => {}} className="hover:text-white transition">Contact</button>
           </div>
           <p className="text-gray-500 text-sm">© 2024 NearJob. Premium Experience.</p>
         </div>

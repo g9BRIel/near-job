@@ -184,8 +184,8 @@ const Dashboard = ({ userType, userData, onNavigate, onContactCompany }) => {
   }, [userType]);
 
   return (
-    <div className="space-y-6 pb-20">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="space-y-4 md:space-y-6 pb-20 px-2 md:px-0">
+      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-6">
         <StatCard
           icon={Briefcase}
           title={userType === 'worker' ? t.dashboard.stats.totalOpportunities : t.dashboard.stats.liveJobs}
@@ -251,12 +251,12 @@ const Dashboard = ({ userType, userData, onNavigate, onContactCompany }) => {
             <Activity className="w-5 h-5 text-blue-400" /> {t.dashboard.sections.insights}
           </h3>
           <div className="space-y-4">
-            <div className="p-3 rounded-xl bg-white/5 border border-white/5">
+            <div className="p-2 sm:p-3 rounded-lg sm:rounded-xl bg-white/5 border border-white/5">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-xs font-bold text-blue-400 uppercase tracking-wider">{t.dashboard.insights.profileHealth}</span>
-                <span className="text-xs text-main">{profileHealth}%</span>
+                <span className="text-[10px] sm:text-xs font-bold text-blue-400 uppercase tracking-wider">{t.dashboard.insights.profileHealth}</span>
+                <span className="text-xs sm:text-sm text-main font-semibold">{profileHealth}%</span>
               </div>
-              <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+              <div className="w-full h-1.5 sm:h-2 bg-white/10 rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-1000" 
                   style={{ width: `${profileHealth}%` }} 
@@ -269,11 +269,11 @@ const Dashboard = ({ userType, userData, onNavigate, onContactCompany }) => {
                 <p className="text-xs text-muted">{t.dashboard.insights.collecting}</p>
               ) : (
                 displayInsights.map((insight, idx) => (
-                  <div key={idx} className="flex items-start gap-3 p-2">
-                    <div className={`p-1.5 rounded-lg ${insight.type === 'success' ? 'bg-green-500/20' : 'bg-yellow-500/20'}`}>
+                  <div key={idx} className="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 bg-white/[0.02] rounded-lg">
+                    <div className={`p-1.5 rounded-lg flex-shrink-0 ${insight.type === 'success' ? 'bg-green-500/20' : 'bg-yellow-500/20'}`}>
                       {insight.icon}
                     </div>
-                    <p className="text-xs text-muted leading-relaxed">
+                    <p className="text-[10px] sm:text-xs text-muted leading-relaxed">
                       {insight.text}
                     </p>
                   </div>
@@ -282,7 +282,7 @@ const Dashboard = ({ userType, userData, onNavigate, onContactCompany }) => {
             </div>
             <button 
               onClick={() => onNavigate?.('edit')}
-              className="w-full py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-main hover:bg-white/10 transition"
+              className="w-full py-2.5 sm:py-3 rounded-lg sm:rounded-xl bg-white/5 border border-white/10 text-xs sm:text-sm font-bold text-main hover:bg-white/10 transition touch-target"
             >
               {t.dashboard.insights.optimize}
             </button>
@@ -290,12 +290,12 @@ const Dashboard = ({ userType, userData, onNavigate, onContactCompany }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
         <div>
-          <h3 className="text-main font-semibold mb-4 flex items-center gap-2">
-            <MapPin className="w-5 h-5 text-red-400" /> {t.dashboard.sections.matches}
+          <h3 className="text-main font-semibold mb-3 md:mb-4 text-sm md:text-base flex items-center gap-2">
+            <MapPin className="w-4 h-4 md:w-5 md:h-5 text-red-400" /> {t.dashboard.sections.matches}
           </h3>
-          <div className="space-y-4">
+          <div className="space-y-3 md:space-y-4">
             {loading ? (
               userType === 'worker' ? <JobCardSkeleton /> : <WorkerCardSkeleton />
             ) : cards.length === 0 ? (
@@ -312,11 +312,11 @@ const Dashboard = ({ userType, userData, onNavigate, onContactCompany }) => {
           </div>
         </div>
 
-        <div>
-           <h3 className="text-main font-semibold mb-4 flex items-center gap-2">
-            <Activity className="w-5 h-5 text-purple-400" /> {t.dashboard.sections.actionFeed}
+        <div className="hidden lg:block">
+          <h3 className="text-main font-semibold mb-3 md:mb-4 text-sm md:text-base flex items-center gap-2">
+            <Activity className="w-4 h-4 md:w-5 md:h-5 text-purple-400" /> {t.dashboard.sections.actionFeed}
           </h3>
-          <div className="glass rounded-2xl overflow-hidden border border-white/5">
+          <div className="glass rounded-xl md:rounded-2xl overflow-hidden border border-white/5">
             <div className="divide-y divide-white/5">
               {recentFeed.length === 0 ? (
                 <div className="p-10 text-center text-sm text-muted">
@@ -364,7 +364,7 @@ const Dashboard = ({ userType, userData, onNavigate, onContactCompany }) => {
           </div>
 
           {userType === 'worker' && (
-            <div className="mt-8">
+            <div className="mt-8 hidden lg:block">
               <h3 className="text-main font-semibold mb-4 flex items-center gap-2">
                 <Globe className="w-5 h-5 text-emerald-400" /> {t.dashboard.sections.landscape}
               </h3>

@@ -2,7 +2,7 @@ import React from 'react';
 import { 
   Home, Briefcase, MapPin, MessageSquare, BarChart3, 
   Building2, Settings, HelpCircle, FileText, Bookmark,
-  Layers, User, LifeBuoy, ShieldCheck
+  User, LifeBuoy, ShieldCheck
 } from 'lucide-react';
 import LogoutButton from '../auth/LogoutButton';
 import { useLanguage } from '../../utils/LanguageContext';
@@ -98,7 +98,7 @@ const Sidebar = React.memo(({ activeTab, setActiveTab, userType, userData }) => 
     <div className="w-72 h-screen glass fixed left-0 top-0 z-50 flex flex-col border-r border-white/5">
       {/* Branding Header */}
       <div className="p-8 flex items-center gap-3">
-        <img src="/logo_main.png" alt="NearJob Logo" className="w-12 h-12 object-contain rotate-3 hover:rotate-0 transition-transform duration-300" />
+        <img src="/mynearjoblogo.png" alt="NearJob Logo" className="w-12 h-12 object-contain" />
         <div>
           <h1 className="text-xl font-black text-white tracking-tight flex items-center gap-1">
             Near<span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">Job</span>

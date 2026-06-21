@@ -176,9 +176,9 @@ const JobsPage = ({ userType, companyFilter, onClearCompanyFilter }) => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="glass rounded-2xl p-6">
-        <div className="flex flex-col md:flex-row gap-4 mb-6">
+    <div className="space-y-4 md:space-y-6">
+      <div className="glass rounded-lg sm:rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6">
+        <div className="flex flex-col gap-2.5 sm:gap-3 md:gap-4 mb-4 sm:mb-6">
           <div className="flex-1 relative">
             <input
               type="text"
@@ -186,24 +186,24 @@ const JobsPage = ({ userType, companyFilter, onClearCompanyFilter }) => {
               onChange={handleSearchChange}
               onKeyDown={(e) => e.key === 'Enter' && runSearch()}
               placeholder={userType === 'worker' ? 'Search jobs, companies…' : 'Search candidates…'}
-              className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
+              className="w-full bg-white/5 border border-white/10 rounded-lg sm:rounded-xl py-2.5 sm:py-3 md:py-3 pl-10 sm:pl-12 pr-3 sm:pr-4 text-xs sm:text-sm text-white placeholder-gray-400 focus:outline-none focus:border-blue-500 input-mobile"
             />
-            <Search className="absolute left-4 top-3.5 w-5 h-5 text-gray-400" />
+            <Search className="absolute left-3 sm:left-4 top-2.5 sm:top-3.5 w-4 sm:w-5 h-4 sm:h-5 text-gray-400" />
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 md:gap-3">
             <button
               type="button"
               onClick={() => setFilterOpen((v) => !v)}
-              className={`flex-1 md:flex-none px-4 md:px-6 py-3 rounded-xl border border-white/10 text-white flex items-center justify-center gap-2 transition ${
+              className={`flex-1 sm:flex-none px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl border border-white/10 text-white flex items-center justify-center gap-1 sm:gap-2 text-xs sm:text-sm transition touch-target ${
                 filterOpen || activeTags.size ? 'bg-blue-600/30 border-blue-500/50' : 'bg-white/5 hover:bg-white/10'
               }`}
             >
-              <Filter className="w-5 h-5" /> <span className="hidden sm:inline">Filters</span> {activeTags.size ? `(${activeTags.size})` : ''}
+              <Filter className="w-4 sm:w-5 h-4 sm:h-5" /> <span className="hidden sm:inline text-xs">Filters</span> {activeTags.size ? `(${activeTags.size})` : ''}
             </button>
             <button
               type="button"
               onClick={runSearch}
-              className="flex-1 md:flex-none px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium hover:opacity-90 transition"
+              className="flex-1 sm:flex-none px-3 sm:px-6 py-2.5 sm:py-3 rounded-lg sm:rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs sm:text-sm font-medium hover:opacity-90 transition touch-target btn-mobile"
             >
               {userType === 'worker' ? 'Search' : 'Find'}
             </button>
@@ -238,7 +238,7 @@ const JobsPage = ({ userType, companyFilter, onClearCompanyFilter }) => {
           </p>
         ) : null}
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2">
           {(userType === 'worker' ? filterTags : ['React', 'Python', 'Design', 'Remote', 'Senior']).map((tag) => {
             const on = activeTags.has(tag);
             return (
@@ -246,7 +246,7 @@ const JobsPage = ({ userType, companyFilter, onClearCompanyFilter }) => {
                 key={tag}
                 type="button"
                 onClick={() => toggleTag(tag)}
-                className={`px-4 py-2 rounded-full text-sm border transition ${
+                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[11px] sm:text-sm border transition touch-target ${
                   on
                     ? 'bg-blue-600/40 text-white border-blue-500/60'
                     : 'bg-white/5 text-gray-300 border-white/10 hover:bg-white/10 hover:border-blue-500/50'
@@ -268,7 +268,7 @@ const JobsPage = ({ userType, companyFilter, onClearCompanyFilter }) => {
         </div>
       ) : null}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
         {loading ? (
           <>
             {[...Array(6)].map((_, i) => (
